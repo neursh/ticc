@@ -135,7 +135,7 @@ function ViewSpace() {
           !ready.get() &&
           <div className="w-screen h-dvh flex flex-col justify-center items-center pl-8 pr-8">
             <div className="flex flex-col justify-center items-center backdrop-blur-lg rounded-lg">
-              <button className="rounded-full pl-3 pr-3 pb-1 pt-1 mt-12 mb-2 text-base bg-black text-white" onClick={() => ready.set(true)}>
+              <button className="rounded-full pl-3 pr-3 pb-1 pt-1 mb-2 text-base bg-black text-white" onClick={() => ready.set(true)}>
               Place it here
               </button>
               <p className="text-center text-xs">
