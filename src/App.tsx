@@ -133,13 +133,15 @@ function ViewSpace() {
         <XRDomOverlay>
         {
           !ready.get() &&
-          <div className="w-screen h-dvh flex flex-col justify-center items-center pl-8 pr-8 backdrop-blur-lg">
-            <button className="rounded-full pl-3 pr-3 pb-1 pt-1 mt-12 mb-2 text-base bg-black text-white" onClick={() => ready.set(true)}>
+          <div className="w-screen h-dvh flex flex-col justify-center items-center pl-8 pr-8">
+            <div className="flex flex-col justify-center items-center backdrop-blur-lg rounded-lg">
+              <button className="rounded-full pl-3 pr-3 pb-1 pt-1 mt-12 mb-2 text-base bg-black text-white" onClick={() => ready.set(true)}>
               Place it here
-            </button>
-            <p className="text-center text-xs">
-              💡 Pro tip: The environment must be a well-lit area. Move the camera around to let the device scan, then place it on a rough, distinct terrain in the environment for better positioning!
-            </p>
+              </button>
+              <p className="text-center text-xs">
+                💡 Pro tip: The environment must be a well-lit area. Move the camera around to let the device scan, then place it on a rough, distinct terrain in the environment for better positioning!
+              </p>
+            </div>
           </div>
         }
         </XRDomOverlay>
