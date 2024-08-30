@@ -4,7 +4,7 @@ import { createXRStore, useXR, XR, XRDomOverlay } from "@react-three/xr";
 import { Suspense, useEffect, useRef } from "react";
 import { Canvas, useThree, MeshProps } from "@react-three/fiber";
 import { useVideoTexture } from "@react-three/drei";
-import { Vector3 } from "three";
+import { Vector3, DoubleSide } from "three";
 import { motion as motion3d } from "framer-motion-3d";
 
 enum ArCheck { waiting, notSupported, supported }
@@ -221,5 +221,5 @@ function VideoMaterial(props: { url: string }) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return <meshBasicMaterial map={texture} toneMapped={false} />
+  return <meshBasicMaterial map={texture} toneMapped={false} side={DoubleSide} />
 }
