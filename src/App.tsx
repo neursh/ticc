@@ -138,7 +138,7 @@ function ViewSpace() {
               Place it here
             </button>
             <p className="text-center text-xs">
-              💡 Pro tip: The environment must be a well-lit area. Move camera around to let the device scan, then place in on a rough, distinct terrain in the environment for better positioning!
+              💡 Pro tip: The environment must be a well-lit area. Move the camera around to let the device scan, then place it on a rough, distinct terrain in the environment for better positioning!
             </p>
           </div>
         }
