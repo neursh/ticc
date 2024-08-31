@@ -197,7 +197,7 @@ function YayVideo(props: { ready: State<boolean, object> }) {
       rotateY: 0
     }}
     animate={{
-      rotateY: Math.PI
+      rotateY: Math.PI * 2
     }}
     transition={{
       duration: 5,
