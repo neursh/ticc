@@ -3,15 +3,16 @@ import { motion } from "framer-motion";
 import { createXRStore, useXR, XR, XRDomOverlay } from "@react-three/xr";
 import { Suspense, useEffect, useRef } from "react";
 import { Canvas, useThree, MeshProps } from "@react-three/fiber";
-import { useVideoTexture } from "@react-three/drei";
-import { Vector3, DoubleSide } from "three";
+import { useTexture, useVideoTexture } from "@react-three/drei";
+import { DoubleSide, Vector3 } from "three";
 import { motion as motion3d } from "framer-motion-3d";
 
 enum ArCheck { waiting, notSupported, supported }
 
 const readyGlobal = hookstate(false);
 const arCheckGlobal = hookstate(ArCheck.waiting);
-const videoUrlGlobal = hookstate("");
+const mediaUrlGlobal = hookstate("");
+const mediaTypeGlobal = hookstate("");
 const arStore = createXRStore();
 
 export default function App() {
@@ -26,7 +27,8 @@ export default function App() {
 function PreUI() {
   const arCheck = useHookstate(arCheckGlobal);
   const fileDialog = useRef<HTMLInputElement>(null);
-  const videoUrl = useHookstate(videoUrlGlobal);
+  const mediaUrl = useHookstate(mediaUrlGlobal);
+  const mediaType = useHookstate(mediaTypeGlobal);
   const videoName = useHookstate("No video file selected");
 
   function checkArXr() {
@@ -52,9 +54,10 @@ function PreUI() {
       if ((e.target as HTMLInputElement).files) {
         const file = (e.target! as HTMLInputElement).files![0];
         if (file) {
+          mediaType.set(file.type.substring(0, 5));
           const buffer = await file.arrayBuffer();
           const blob = new Blob([buffer], { type: file.type });
-          videoUrl.set(URL.createObjectURL(blob));
+          mediaUrl.set(URL.createObjectURL(blob));
           videoName.set(file.name);
         }
       }
@@ -82,7 +85,7 @@ function PreUI() {
       <p>
         I've got no idea why I chose this name.
       </p>
-      <input ref={fileDialog} className="w-0 h-0" type="file" accept="video/*" />
+      <input ref={fileDialog} className="w-0 h-0" type="file" accept="video/*,image/*" />
       <motion.button
       className={`rounded-full pl-3 pr-3 pb-1 pt-1 mt-3 mb-2 text-base bg-black text-white font-semibold ${arCheck.get() === ArCheck.supported ? "cursor-pointer" : "cursor-default"}`}
       initial={{ opacity: 1 }}
@@ -152,7 +155,8 @@ function ViewSpace() {
 }
 
 function YayVideo(props: { ready: State<boolean, object> }) {
-  const videoUrl = useHookstate(videoUrlGlobal);
+  const mediaUrl = useHookstate(mediaUrlGlobal);
+  const mediaType = useHookstate(mediaTypeGlobal);
   const cube = useRef<MeshProps>(null);
 
   const three = useThree();
@@ -204,8 +208,17 @@ function YayVideo(props: { ready: State<boolean, object> }) {
       <boxGeometry />
       <Suspense fallback={<meshBasicMaterial wireframe />}>
       {
-        props.ready.get() &&
-        <VideoMaterial url={videoUrl.get()} />
+        props.ready.get() && 
+        <>
+        {
+          mediaType.get() === "video" &&
+          <VideoMaterial url={mediaUrl.get()} />
+        }
+        {
+          mediaType.get() === "image" &&
+          <ImageMaterial url={mediaUrl.get()} />
+        }
+        </>
       }
       </Suspense>
     </motion3d.mesh>
@@ -220,6 +233,12 @@ function VideoMaterial(props: { url: string }) {
     texture.dispose();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  return <meshBasicMaterial map={texture} toneMapped={false} side={DoubleSide} />
+}
+
+function ImageMaterial(props: { url: string }) {
+  const texture = useTexture(props.url);
 
   return <meshBasicMaterial map={texture} toneMapped={false} side={DoubleSide} />
 }
